@@ -71,7 +71,7 @@ extension ViewController : TapDelegate,DoubleTapDelegate,LongPressDelegate,PanDe
             (_) -> Void in
         }
         let deleteAction = UIAlertAction(title: "Удалить обьекты", style: .destructive) { (_) -> Void in
-            let newObjectsMarker = self.mapMarkers.filter({(objectMarker : MapMarker) -> Bool in return objectMarker .metadata?.getString(key: "key_poi") == (object as! String)})
+            let newObjectsMarker = self.mapMarkers.filter({(objectMarker : MapMarker) -> Bool in return objectMarker .metadata?.getString(key: "key_poi") == (object as! String)}) 
             let newObjectsPolyline = self.mapPolyliness.filter({(objectPoly : MapPolyline) -> Bool in return objectPoly .metadata?.getString(key: "key_poly") == (object as! String)})
             
             if newObjectsMarker != [] {
@@ -84,8 +84,16 @@ extension ViewController : TapDelegate,DoubleTapDelegate,LongPressDelegate,PanDe
         let routeAction = UIAlertAction(title: "Маршрут", style: .default) {
             (_) -> Void in
             if self.isMapSceneLoaded {
-                self.routingExample.addRoute(last: object as! GeoCoordinates)
-                //   self.createMapPolyline(arrayPolyline: drawNewPRoute!)
+            
+                if (object as! GeoCoordinates) == nil {
+                    self.routingExample.addRoute(last: object as! GeoCoordinates)
+                    //   self.createMapPolyline(arrayPolyline: drawNewPRoute!)
+                } else {
+                    let alertController = UIAlertController(title: "Error", message: "no last position found", preferredStyle: .alert)
+                       alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                       self.present(alertController, animated: true, completion: nil)
+                }
+          
             }
         }
         alert.addAction(deleteAction)
