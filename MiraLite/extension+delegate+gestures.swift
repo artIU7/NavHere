@@ -45,7 +45,9 @@ extension ViewController : TapDelegate,DoubleTapDelegate,LongPressDelegate,PanDe
         switch state {
             
         case .begin:
-            addAction(mapHere.viewToGeoCoordinates(viewCoordinates: origin) as Any)
+            var position = mapHere.viewToGeoCoordinates(viewCoordinates: origin)!
+            position = GeoCoordinates(latitude: position.latitude, longitude: position.longitude, altitude: 0.0)
+            addAction(position as Any)
         case .update: break
         //
         case .end: break
@@ -84,16 +86,14 @@ extension ViewController : TapDelegate,DoubleTapDelegate,LongPressDelegate,PanDe
         let routeAction = UIAlertAction(title: "Маршрут", style: .default) {
             (_) -> Void in
             if self.isMapSceneLoaded {
-            
-                if (object as! GeoCoordinates) == nil {
-                    self.routingExample.addRoute(last: object as! GeoCoordinates)
+                let lastCoordinate = object as! GeoCoordinates
+                print(lastCoordinate) //
+                    self.routingExample.addRoute(last: lastCoordinate)
                     //   self.createMapPolyline(arrayPolyline: drawNewPRoute!)
-                } else {
-                    let alertController = UIAlertController(title: "Error", message: "no last position found", preferredStyle: .alert)
+               
+                 /*   let alertController = UIAlertController(title: "Error", message: "no last position found", preferredStyle: .alert)
                        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                       self.present(alertController, animated: true, completion: nil)
-                }
-          
+                       self.present(alertController, animated: true, completion: nil) */
             }
         }
         alert.addAction(deleteAction)
